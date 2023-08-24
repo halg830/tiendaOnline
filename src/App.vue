@@ -1,13 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-
-const dataImgs = {
-  controlXbox360: "/src/imgs/control_xbox_360.png",
-  xbox360: "/src/imgs/consola 360.png",
-  xboxOne: "/src/imgs/xboxOne.webp",
-  playstation1: "/src/imgs/playstation2.png",
-  playstation5: "/src/imgs/playstation5.jpg",
-}
+import controlXbox360 from "/src/imgs/control_xbox_360.png"
+import xbox360 from "/src/imgs/consola 360.png"
+import xboxOne from "/src/imgs/xboxOne.webp"
+import playstation1 from "/src/imgs/playstation2.png"
+import playstation5 from "/src/imgs/playstation5.jpg"
 
 const convertirMoneda=(valor)=>{
   return valor.toLocaleString('es-CO', {
@@ -23,31 +20,31 @@ const convertirFloat=(valor)=>{
 
 const articulos = ref([
   {
-    img: dataImgs.controlXbox360,
+    img: controlXbox360,
     nombre: "Control xbox 360",
     tienda: "Random",
     precio: convertirMoneda(90000)
   },
   {
-    img: dataImgs.xbox360,
+    img: xbox360,
     nombre: "Xbox 360",
     tienda: "Random",
     precio: convertirMoneda(500000)
   },
   {
-    img: dataImgs.playstation1,
+    img: playstation1,
     nombre: "Playstation 1",
     tienda: "Random",
     precio: convertirMoneda(200000)
   },
   {
-    img: dataImgs.playstation5,
+    img: playstation5,
     nombre: "Playstation 5",
     tienda: "Random",
     precio: convertirMoneda(2000000)
   },
   {
-    img: dataImgs.xboxOne,
+    img: xboxOne,
     nombre: "Xbox One",
     tienda: "Random",
     precio: convertirMoneda(2000000)
@@ -55,14 +52,14 @@ const articulos = ref([
 ])
 
 
-let estado = ref({ display: 'none' });
+let estado = ref({display: "none"});
 
 const carrito = ref([
 
 ]);
 
 const abrirCar = () => {
-  estado.value.display = estado.value.display === 'none' ? 'block' : 'none';
+  estado.value.display = estado.value.display==="none" ? "table" : "none";
 };
 
 let activarBt = ref(false)
@@ -70,7 +67,15 @@ let activarBt = ref(false)
 const agregar = (item) => {
   const buscarItem = carrito.value.find(e => e.nombre == item.nombre)
 
+  let evento = event.target 
+
+  evento.textContent = "✔"
+    setTimeout(() => {
+      evento.textContent = "🛒"
+    }, 1000);
+
   if (buscarItem) {
+    
     buscarItem.cantidad += 1
     activarBt.value = false
     return
@@ -123,7 +128,7 @@ const vaciarCar = () => {
     <!-- Barra superior -->
     <div id="barraTop">
       <h1>Mundo Gamer🎮</h1>
-      <button class="iconocarro" @click="abrirCar">🛒</button>
+      <button class="iconocarro" @click="abrirCar()">🛒</button>
     </div>
     <!-- Carrito -->
     <div>
@@ -166,7 +171,7 @@ const vaciarCar = () => {
     </div>
 
     <div class="fondo">
-      <div>xd
+      <div>hola
       </div>
     </div>
     
@@ -187,7 +192,7 @@ const vaciarCar = () => {
               <b>Precio: </b>
               {{ item.precio }}
             </p>
-            <button @click="agregar(item)">Agregar🛒</button>
+            <button @click="agregar(item)" class="btAgregar">🛒</button>
 
           </div>
         </div>
@@ -212,26 +217,29 @@ const vaciarCar = () => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: fit-content;
-
+  height: 320px;
+  width: 450px;
   padding: 20px;
   background-color: white;
   border-radius: 6px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .12);
-  font-size: 1.2vw;
+  font-size: x-large;
 }
 
 .card>* {
   margin: 10px;
 }
 
-.card>button{
-  width: 100%;
+.btAgregar{
+
+  padding: 10px;
+  font-size: large;
 }
 
 .imgArt {
-  width: 150px;
-  height: 110px;
+  width: 200px;
+  height: 150px;
+  margin-right: 20px;
 }
 
 #trBottom>* {
@@ -243,6 +251,7 @@ const vaciarCar = () => {
   flex-direction: column;
   align-items: center;
   min-height: 100%;
+ 
 }
 
 #body>h1 {
@@ -250,6 +259,7 @@ const vaciarCar = () => {
   font-size: xx-large;
   box-shadow: 0px 0px 10px aqua;
   width: 100%;
+  text-align: center;
 }
 
 
@@ -258,18 +268,21 @@ const vaciarCar = () => {
   flex-wrap: wrap;
   justify-content: space-around;
   gap: 15px;
- 
+  row-gap: 40px;
+ margin-bottom: 20px;
+ padding: 20px;
 }
 
 /* Carrito */
 table {
-  position: absolute;
+  position: fixed;
+  top: 80px;
   right: 10px;
   border: 1px solid black;
   background-color: rgb(181, 181, 181);
   text-align: center;
   border-collapse: collapse;
-
+  z-index: 5000;
 }
 
 td {
@@ -284,6 +297,8 @@ td {
 /* Barra superior */
 
 #barraTop {
+  position: fixed;
+  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -292,6 +307,9 @@ td {
   color: white;
   text-shadow: 0 0 5px white;
   padding: 0 20px;
+  z-index: 5000;
+  width: 98%;
+  height: 80px;
 }
 
 
@@ -302,7 +320,8 @@ td {
 } */
 
 .fondo {
-  position: relative;
+ 
+  margin-top: 80px;
   display: flex;
   height: 500px;
   align-items: center;
@@ -335,5 +354,13 @@ td {
 
 .iconocarro:hover{
   background-color: #001dab;
+}
+
+.carVisible{
+  display: block;
+}
+
+.carInvisible{
+  display: none;
 }
 </style>
