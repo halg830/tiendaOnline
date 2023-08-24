@@ -1,34 +1,56 @@
 <script setup>
 import { ref } from 'vue'
 
-const  dataImgs = {
-  controlXbox360: "/src/imgs/control_xbox_360.png"
+const dataImgs = {
+  controlXbox360: "/src/imgs/control_xbox_360.png",
+  xbox360: "/src/imgs/consola 360.png",
+  xboxOne: "/src/imgs/xboxOne.webp",
+  playstation1: "/src/imgs/playstation2.png",
+  playstation5: "/src/imgs/playstation5.jpg",
 }
+
+const convertirMoneda=(valor)=>{
+  return valor.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP'
+  });
+}
+
+const convertirFloat=(valor)=>{
+  return parseInt(valor.replace(/[^0-9-]/g, ''))/100;
+}
+
 
 const articulos = ref([
   {
     img: dataImgs.controlXbox360,
     nombre: "Control xbox 360",
     tienda: "Random",
-    precio: 90000
+    precio: convertirMoneda(90000)
   },
   {
-    img: "/src/imgs/control_xbox_360.png",
-    nombre: "Control xbox 360",
+    img: dataImgs.xbox360,
+    nombre: "Xbox 360",
     tienda: "Random",
-    precio: 90000
+    precio: convertirMoneda(500000)
   },
   {
-    img: "/src/imgs/control_xbox_360.png",
-    nombre: "Control xbox 360",
+    img: dataImgs.playstation1,
+    nombre: "Playstation 1",
     tienda: "Random",
-    precio: 90000
+    precio: convertirMoneda(200000)
   },
   {
-    img: "/src/imgs/control_xbox_360.png",
-    nombre: "Control xbox 360",
+    img: dataImgs.playstation5,
+    nombre: "Playstation 5",
     tienda: "Random",
-    precio: 90000
+    precio: convertirMoneda(2000000)
+  },
+  {
+    img: dataImgs.xboxOne,
+    nombre: "Xbox One",
+    tienda: "Random",
+    precio: convertirMoneda(2000000)
   },
 ])
 
@@ -43,7 +65,7 @@ const abrirCar = () => {
   estado.value.display = estado.value.display === 'none' ? 'block' : 'none';
 };
 
-let activarBt = ref(false) 
+let activarBt = ref(false)
 
 const agregar = (item) => {
   const buscarItem = carrito.value.find(e => e.nombre == item.nombre)
@@ -57,7 +79,7 @@ const agregar = (item) => {
   carrito.value.push({
     img: item.img,
     nombre: item.nombre,
-    precio: item.precio,
+    precio: convertirFloat(item.precio),
     cantidad: 1,
   })
 }
@@ -75,35 +97,34 @@ const eliminar = (i) => {
 
 
 
-const aumentar = (i)=>{
+const aumentar = (i) => {
   activarBt.value = false
 
-  carrito.value[i].cantidad+=1
+  carrito.value[i].cantidad += 1
 }
 
-const disminuir = (i)=>{
-  if(carrito.value[i].cantidad==1){
+const disminuir = (i) => {
+  if (carrito.value[i].cantidad == 1) {
     activarBt.value = true
-     return
+    return
   }
 
-  carrito.value[i].cantidad-=1
+  carrito.value[i].cantidad -= 1
 }
 
-const vaciarCar = ()=>{
+const vaciarCar = () => {
   carrito.value = []
 }
 
 </script>
 
 <template>
-  <div>
+  <div id="contBody">
     <!-- Barra superior -->
     <div id="barraTop">
       <h1>Mundo Gamer🎮</h1>
-      <button @click="abrirCar">🛒</button>
+      <button class="iconocarro" @click="abrirCar">🛒</button>
     </div>
-
     <!-- Carrito -->
     <div>
       <table :style="estado">
@@ -120,7 +141,7 @@ const vaciarCar = ()=>{
           <td>{{ item.nombre }}</td>
           <td>{{ item.precio }}</td>
           <td>
-            <button @click="disminuir(index)" :disabled="activarBt">➖</button>
+            <button @click="disminuir(index)" >➖</button>
             {{ item.cantidad }}
             <button @click="aumentar(index)">➕</button>
           </td>
@@ -144,23 +165,31 @@ const vaciarCar = ()=>{
       </table>
     </div>
 
+    <div class="fondo">
+      <div>xd
+      </div>
+    </div>
+    
+
     <!-- Catalogo -->
     <div id="body">
-      <h1>Consolas de videojuegos</h1>
+      <h1>Nuestros artículos</h1>
       <div id="cont">
         <div class="card" v-for="(item, i) in articulos" :key="i">
           <img class="imgArt" :src="item.img" alt="">
-          <h4>{{ item.nombre }}</h4>
+          <div>
+            <h4>{{ item.nombre }}</h4>
+            <p>
+              <b>Tienda: </b>
+              {{ item.tienda }}
+            </p>
+            <p>
+              <b>Precio: </b>
+              {{ item.precio }}
+            </p>
+            <button @click="agregar(item)">Agregar🛒</button>
 
-          <p>
-            <b>Tienda: </b>
-            {{ item.tienda }}
-          </p>
-          <p>
-            <b>Precio: </b>
-            {{ item.precio }}
-          </p>
-          <button @click="agregar(item)">Agregar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -168,30 +197,71 @@ const vaciarCar = ()=>{
 </template>
 
 <style scoped>
-/* Carrito */
+/* ContBody */
+#contBody {
+  background-image: url("/src/imgs/fondo.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+}
+
+/* Catalogo */
 .card {
-  border: 1px solid black;
+
   display: flex;
-  flex-direction: column;
-  width: fit-content;
+  flex-direction: row;
+  align-items: center;
+  height: fit-content;
+
   padding: 20px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .12);
+  font-size: 1.2vw;
+}
+
+.card>* {
+  margin: 10px;
+}
+
+.card>button{
+  width: 100%;
 }
 
 .imgArt {
   width: 150px;
+  height: 110px;
 }
 
 #trBottom>* {
   border-top: 1px solid black;
 }
 
-/* Catalogo */
-
-#cont {
-  display: grid;
-  grid-template-columns: repeat(4, 25%);
+#body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
 }
 
+#body>h1 {
+  color: white;
+  font-size: xx-large;
+  box-shadow: 0px 0px 10px aqua;
+  width: 100%;
+}
+
+
+#cont {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 15px;
+ 
+}
+
+/* Carrito */
 table {
   position: absolute;
   right: 10px;
@@ -217,14 +287,53 @@ td {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: black;
+  background: linear-gradient(45deg, #7a008feb, #001785c7);
+  box-shadow: 5px 5px 30px rgb(255 0 247);
   color: white;
+  text-shadow: 0 0 5px white;
   padding: 0 20px;
 }
 
-#barraTop>button {
+
+/* #barraTop>button {
   width: 40px;
   height: 40px;
 
+} */
+
+.fondo {
+  position: relative;
+  display: flex;
+  height: 500px;
+  align-items: center;
+  justify-content: space-around;
+  background-image: url(https://img1.wallspic.com/crops/5/9/5/8/3/138595/138595-monitor_de_computadora_de_pantalla_plana_negra_con_teclado_y_mouse-3840x2160.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+/* .fondo::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 500px;
+  background-image: url(https://img1.wallspic.com/crops/5/9/5/8/3/138595/138595-monitor_de_computadora_de_pantalla_plana_negra_con_teclado_y_mouse-3840x2160.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.3;
+  z-index: -1;
+} */
+.iconocarro{
+  height: 70px;
+  width: 70px;
+  font-size: 37px;
+  background-color: transparent;
+  border: 0px;
+  color: black;
+}
+
+.iconocarro:hover{
+  background-color: #001dab;
 }
 </style>
